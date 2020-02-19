@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "20974435965",
+    "firebase_url": "https://kolab-ea306.firebaseio.com",
+    "project_id": "kolab-ea306",
+    "storage_bucket": "kolab-ea306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20974435965:android:33de95c1d5ad9cb4c43b14",
+        "android_client_info": {
+          "package_name": "com.example.islet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20974435965-oafgrb53uvtd78tn00tdorjlcd88to4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-QfQhJWgA3eY3JUF3ij2jtwQT_TJ1RwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20974435965-oafgrb53uvtd78tn00tdorjlcd88to4i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20974435965:android:6f4c773bbbd60bfdc43b14",
+        "android_client_info": {
+          "package_name": "com.example.kolab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20974435965-pa8ccna9c024echsbshu87fokj8gpmqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kolab",
+            "certificate_hash": "5ba4ce96fb98bd53306372dbba2bc1798efeebba"
+          }
+        },
+        {
+          "client_id": "20974435965-oafgrb53uvtd78tn00tdorjlcd88to4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-QfQhJWgA3eY3JUF3ij2jtwQT_TJ1RwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20974435965-oafgrb53uvtd78tn00tdorjlcd88to4i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
