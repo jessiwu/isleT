@@ -1,6 +1,6 @@
-# islet
+# isleT🏝️
 
-A teachers rating app.
+isleT🏝️ is a teachers rating app built with Flutter framework.
 
 ## Info
 
