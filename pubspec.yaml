@@ -71,3 +71,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+  - family: NotoSansSC
+    fonts:
+      - asset: fonts/NotoSansSC-Black.otf
+      - asset: fonts/NotoSansSC-Bold.otf
+        weight: 500
+      - asset: fonts/NotoSansSC-Light.otf
+      - asset: fonts/NotoSansSC-Medium.otf
+      - asset: fonts/NotoSansSC-Regular.otf
+      - asset: fonts/NotoSansSC-Thin.otf
