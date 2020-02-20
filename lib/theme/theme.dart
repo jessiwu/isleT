@@ -7,7 +7,7 @@ final ThemeData kisleTTheme = _buildisleTTheme();
 ThemeData _buildisleTTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    primaryColor: kisleTPrimaryGreen,
+    primaryColor: kisleTPrimaryGreenLight,
     accentColor: kisleTAccentYellow,
     scaffoldBackgroundColor: kisleTBackgroundWhite,
     cardColor: kisleTBackgroundWhite,
@@ -38,14 +38,18 @@ ThemeData _buildisleTTheme() {
 TextTheme _buildisleTTextTheme(TextTheme base) {
   return base.copyWith(
     headline: base.headline.copyWith(
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
     ),
     title: base.title.copyWith(
       fontSize: 18.0,
     ),
     caption: base.caption.copyWith(
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       fontSize: 14.0,
+    ),
+    display1: base.display1.copyWith(
+      fontWeight: FontWeight.w600,
+      fontSize: 16.0
     ),
   ).apply(
     fontFamily: 'NotoSansSC',

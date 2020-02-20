@@ -8,7 +8,7 @@ const kisleTAccentYellowLight = const Color(0xFFffff6b);
 const kisleTAccentYellow = const Color(0xFFfdd835);
 const kisleTAccentYellowDark = const Color(0xFFc6a700);
 
-const kisleTextTBlack = const Color(0xFF424242);
+const kisleTextTBlack = const Color(0xFF212121);
 
 const kisleTErrorRed = const Color(0xFFC5032B);
 
