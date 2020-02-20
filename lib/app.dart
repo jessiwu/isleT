@@ -4,7 +4,8 @@ import 'theme/theme.dart';
 
 class IsletApp extends StatelessWidget {
 
-  Widget build (BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'isleT',
       // home: HomePage(),
