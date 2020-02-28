@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:islet/search.dart';
 
 import 'theme/theme.dart';
 import 'home.dart';
@@ -9,7 +10,7 @@ class IsletApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'isleT',
-      home: HomePage(),
+      home: SearchPage(),
       // initialRoute: '/login',
       // onGenerateRoute: _getRoute,
       theme: kisleTTheme,
