@@ -1,8 +1,12 @@
 # isleT🏝️
 
-isleT🏝️ is a teachers rating app built with Flutter framework.
+isleT🏝️ is a teachers rating app, 
+frontend is built with Flutter framework,
+I store data in Google Cloud Firestore as backend.
 
 ## Info
+
+isleT🏝️ has search functionality now:)
 
 This project is currently under construction.
 
@@ -13,6 +17,8 @@ below is a screenshot of a ugly search page.
 TODO
 - 0221: add theme and color 
 - 0225: re-design the search page
+- 0229: re-design the review page 
+- 0302: modify the search functionality
 
 Get to know Flutter on
 [Flutter.io](https://flutter.dev/)! , which offers tutorials,
