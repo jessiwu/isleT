@@ -6,8 +6,9 @@ isleT🏝️ is a teachers rating app built with Flutter framework.
 
 This project is currently under construction.
 
-here's a screenshot of a ugly search page
-<img src="https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif" width="360" height="640" />![Alt Text](https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif)
+below is a screenshot of a ugly search page\
+<img src="https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif" width="720" height="1080" />
+![Alt Text](https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif)
 
 TODO
 - 0221: add theme and color 
