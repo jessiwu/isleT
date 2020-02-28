@@ -6,9 +6,12 @@ isleT🏝️ is a teachers rating app built with Flutter framework.
 
 This project is currently under construction.
 
+here's a screenshot of a ugly search page
+![Alt Text](https://github.com/jessiwu/isleT/tree/colorTheme/screenshots/searchPage.gif)
+
 TODO
 - 0221: add theme and color 
-- 0222: re-design the search page
+- 0225: re-design the search page
 
 Get to know Flutter on
 [Flutter.io](https://flutter.dev/)! , which offers tutorials,
