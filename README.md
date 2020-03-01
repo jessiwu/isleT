@@ -10,9 +10,9 @@ isleT🏝️ has search functionality now:)
 
 This project is currently under construction.
 
-below is a screenshot of a ugly search page.
+below is a screenshot of isleT's search page and review page(needed to be re-designed).
 <!-- <img src="https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif" width="720" height="1480" /> -->
-![Alt Text](https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif)
+![Alt Text](https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchWithReviewpage.gif)
 
 TODO
 - 0221: add theme and color 
