@@ -1,8 +1,11 @@
 # isleT🏝️
 
-isleT🏝️ is a teachers rating app, 
+isleT🏝️ is a teachers rating app,
+
 frontend is built with Flutter framework,
+
 I store data in Google Cloud Firestore as backend.
+
 
 ## Info
 
