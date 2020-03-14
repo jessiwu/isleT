@@ -11,17 +11,32 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _searchController = TextEditingController();
-  String _searchName = '';
+  final _searchBarTextController = TextEditingController();
+  String _userType = '';
+  String _previousSearchWord = '';
 
   Widget _searchBar(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return ClipRRect(
-      borderRadius: BorderRadius.only( bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
+      borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
       child: Container(
         height: 60,
         width: width,
-        decoration: BoxDecoration(color: kisleTPrimaryGreenLight),
+        decoration: BoxDecoration(
+          color: kisleTPrimaryGreenLight,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 50.0, // softening the shadow
+              spreadRadius: 15.0, // extending the shadow
+              offset: Offset(
+                0.0, // horizontal, move right 10
+                100.0, // vertical, move down 10
+              ),
+            )
+          ],
+        ),
         alignment: Alignment(0.0, 0.6),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12.0),
@@ -39,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
                   EdgeInsets.symmetric(horizontal: 4.0, vertical: 16.0),
             ),
             textAlignVertical: TextAlignVertical.center,
-            controller: _searchController,
+            controller: _searchBarTextController,
           ),
         ),
       ),
@@ -55,6 +70,38 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  Widget _buildSuggestionCard(BuildContext context, DocumentSnapshot snapshot) {
+    return Container(
+      height: 100.0,
+      margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),
+      child: Card(
+        // margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),
+        elevation: 1.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: InkWell(
+          radius: 500,
+          splashColor: kisleTPrimaryGreen.withAlpha(80),
+          onTap: () {
+            print('Card tapped.');
+          },
+          child: ListTile(
+            key: Key(snapshot.documentID),
+            title: Text(snapshot.data['fullName']),
+            subtitle: Text(snapshot.data['school']),
+            // onTap: () => print('haha'),
+            onTap: () => _navigateToReviewPage(snapshot.data['fullName']),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _navigateToReviewPage(String professorName) {
+    Navigator.pushNamed(context, '/reviewPage', arguments: professorName);
+  }
+
   Widget _buildSuggestionList(
       BuildContext context, List<DocumentSnapshot> snapshots) {
     print(snapshots.length);
@@ -64,7 +111,7 @@ class _SearchPageState extends State<SearchPage> {
         shrinkWrap: true,
         itemCount: snapshots.length,
         itemBuilder: (BuildContext context, int index) =>
-            _buildSuggestionItem(context, snapshots[index]),
+            _buildSuggestionCard(context, snapshots[index]),
       ),
     );
   }
@@ -72,11 +119,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget _searchResult(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Flexible(
-        child: (_searchName != '')
+        child: (_userType != '')
             ? StreamBuilder<QuerySnapshot>(
                 stream: Firestore.instance
                     .collectionGroup('professors')
-                    .where('lastName', isEqualTo: _searchName)
+                    .where('lastName', isEqualTo: _userType)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError)
@@ -94,8 +141,73 @@ class _SearchPageState extends State<SearchPage> {
             : SizedBox());
   }
 
-  _showSuggestions() {
-    _searchName = _searchController.text;
+  Widget _searchResultInDatabase(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    Stream<QuerySnapshot> _searchByLastName;
+    if (_userType.length == 0) {
+      // user type nothing OR has deleted his/her previous typed search word
+      return Center();
+    }
+    if (_userType.length == 1) {
+      // user type one search word
+      _searchByLastName = Firestore.instance
+          .collectionGroup('professors')
+          .where('lastName', isEqualTo: _userType)
+          .snapshots();
+      return Flexible(
+              child: StreamBuilder<QuerySnapshot>(
+            stream: _searchByLastName,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return LinearProgressIndicator();
+                default:
+                  return (snapshot.data.documents.length != 0)
+                      ? _buildSuggestionList(context, snapshot.data.documents)
+                      : ListTile(title: Text('No result...'));
+              }
+            }),
+      );
+    }
+
+    // user type more than one words
+    print('previous search word: $_previousSearchWord');
+    return Flexible(
+          child: StreamBuilder<QuerySnapshot>(
+          // stream: _searchByLastName,
+          stream: Firestore.instance
+              .collectionGroup('professors')
+              .where('lastName', isEqualTo: _previousSearchWord)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) print(snapshot.data.documents.length);
+            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return LinearProgressIndicator();
+              default:
+                List<DocumentSnapshot> filtered = [];
+                if (snapshot.data.documents.length != 0) {
+                  snapshot.data.documents.forEach((doc) {
+                    if (doc.data['fullName'].toString().contains(_userType))
+                      filtered.add(doc);
+                  });
+                }
+                print('filtered: ${filtered.length}');
+                return (filtered.length != 0)
+                    ? _buildSuggestionList(context, filtered)
+                    : _buildSuggestionList(context, snapshot.data.documents);
+            }
+          }),
+    );
+  }
+
+  _showSearchSuggestions() {
+    if (_userType != '') {
+      _previousSearchWord = _userType[0];
+    }
+    _userType = _searchBarTextController.text;
     setState(() {
       build(context);
     });
@@ -103,13 +215,13 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    _searchController.addListener(_showSuggestions);
+    _searchBarTextController.addListener(_showSearchSuggestions);
     super.initState();
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _searchBarTextController.dispose();
     super.dispose();
   }
 
@@ -117,15 +229,16 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar( elevation: 0.0, ),
+      appBar: AppBar(
+        elevation: 0.0,
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
             _searchBar(context),
-            Divider(
-              thickness: 1.0,
-            ),
-            _searchResult(context),
+            // Divider(thickness: 1.0,),
+            // _searchResult(context),
+            _searchResultInDatabase(context),
           ],
         ),
       ),
