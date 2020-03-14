@@ -11,12 +11,12 @@ ThemeData _buildisleTTheme() {
     accentColor: kisleTAccentYellow,
     scaffoldBackgroundColor: kisleTBackgroundWhite,
     cardColor: kisleTBackgroundWhite,
+    textSelectionColor: kisleTPrimaryGreenLight,
+    errorColor: kisleTErrorRed,
 
     cardTheme: base.cardTheme.copyWith(
       color: kisleTSurfaceWhite,
     ),
-    textSelectionColor: kisleTPrimaryGreenLight,
-    errorColor: kisleTErrorRed,
 
     textTheme: _buildisleTTextTheme(base.textTheme),
     primaryTextTheme: _buildisleTTextTheme(base.primaryTextTheme),
