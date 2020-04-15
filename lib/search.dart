@@ -72,7 +72,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _buildSuggestionCard(BuildContext context, DocumentSnapshot snapshot) {
     return Container(
-      height: 100.0,
+      height: 80.0,
       margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),
       child: Card(
         // margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),

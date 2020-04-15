@@ -4,6 +4,7 @@ import 'package:islet/search.dart';
 import 'theme/theme.dart';
 import 'home.dart';
 import 'review.dart';
+import 'review_page.dart';
 
 class IsletApp extends StatelessWidget {
   @override
@@ -25,7 +26,8 @@ Route<dynamic> _getRoute(RouteSettings settings) {
     case '/reviewPage':
       String arg = settings.arguments;
       return MaterialPageRoute(
-        builder: (context) => KoLabHomePage(professorName: arg),
+        // builder: (context) => KoLabHomePage(professorName: arg),
+        builder: (context) => ReviewPage(professorName: arg),
       );
       break;
   }
