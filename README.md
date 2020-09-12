@@ -17,7 +17,7 @@ This project is currently under construction.
 
 below is a screenshot of isleT app
 <!-- <img src="https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/searchPage.gif" width="720" height="1480" /> -->
-![Alt Text](https://github.com/jessiwu/isleT/blob/colorTheme/screenshots/yelp_ui.gif)
+![Alt Text](https://github.com/jessiwu/isleT/blob/yelp/screenshots/yelp_ui.gif)
 
 TODO
 - add user authentication feature
