@@ -83,7 +83,7 @@ class _HomeSearchTabState extends State<HomeSearchTab> {
         top: 10,
         left: 10,
         child: Text(
-          '找教授?',
+          'Professor?', //'找教授?',
           style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
         ));
   }

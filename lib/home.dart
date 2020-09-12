@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
         top: 10,
         left: 10,
         child: Text(
-          'Find Professor?', //'找教授?',
+          '找教授?',
           style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
         ));
   }
