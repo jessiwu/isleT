@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:islet/logInDialog.dart';
 
 import 'model/review.dart';
 
@@ -14,51 +15,72 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   static String _prof = '';
+  bool isCommentPressed;
+  @override
+  void initState() {
+    super.initState();
+    isCommentPressed = false;
+  }
+
+  _navigateToLogInOrSignUpPage() {
+    Navigator.pushNamed(context, '/logInOrSignUpPage');
+  }
+
+  _dismissLogInDialog() {
+    Navigator.pop(context);
+  }
+
+  Widget _logInDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('請先登入'),
+      content: Text('登入後才能評論喔'),
+      actions: <Widget>[
+        FlatButton(
+            key: Key('登入'),
+            onPressed: _navigateToLogInOrSignUpPage(),
+            child: Text('登入')),
+        FlatButton(
+            key: Key('稍後再說'),
+            onPressed: _dismissLogInDialog(),
+            child: Text('稍後再說')),
+      ],
+    );
+  }
+
+  Future<void> onPr() async {
+    await showDialog(context: context, builder: _logInDialog);
+  }
+
+  onCommentButtonPress() {
+    showDialog(context: context, builder: _logInDialog);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     _prof = widget.professorName;
+    if (isCommentPressed) onPr();
     return Scaffold(
         appBar: AppBar(),
-        body: _buildBody(context),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Add a new piece of review on your professor
-            var ref = Firestore.instance
-                .collection('schools')
-                .document('national central univ')
-                .collection('professors')
-                .document(_prof)
-                .collection('reviews');
-
-            var newdata = {
-              'courseName': '資料科學導論',
-              'reviewText':
-                  '中央資工找教授 陳弘軒教授人很nice很好溝通,尊重學生想做的研究方向,建議可以跟他聊聊看實驗室風氣的話建議直接去跟學長姐聊聊看最清楚',
-              'courseDifficulty': 3.0,
-              'professorRating': 5.0,
-              'gradeReceived': 98.0,
-              'forCredit': true,
-              'wouldTakeAgain': true,
-              'attendance': true,
-              'thumbsUp':0,
-              'thumbsDown':0,
-            };
-            ref.add(newdata);
-            print('add new comment on professor:$_prof');
-          },
-          label: Text('評論'),
-          icon: Icon(Icons.add),
-          backgroundColor: Colors.pinkAccent,
+        body: _buildBody(),
+        floatingActionButton: Container(
+          child: FloatingActionButton.extended(
+            label: Text('評論'),
+            icon: Icon(Icons.add),
+            backgroundColor: Colors.pinkAccent,
+            // pressed FAB: error
+            onPressed: onCommentButtonPress,
+          ),
         ));
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody() {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection('schools')
-          .document('national central univ')
+          .doc('national central univ')
           .collection('professors')
-          .document(_prof)
+          .doc(_prof)
           .collection('reviews')
           .snapshots(),
       builder: (context, snapshot) {
@@ -68,19 +90,62 @@ class _ReviewPageState extends State<ReviewPage> {
           case ConnectionState.waiting:
             return LinearProgressIndicator();
           default:
-            return _buildListView(context, snapshot.data.documents);
+            return _buildListView(context, snapshot.data.docs);
         }
       },
     );
   }
 }
 
+// _buildCommentButton(BuildContext context) {
+//   _navigateToLogInOrSignUpPage() {
+//     Navigator.pushNamed(context, '/logInOrSignUpPage');
+//   }
+
+//   _dismissLogInDialog() {
+//     Navigator.pop(context);
+//   }
+
+//   Widget _logInDialog(BuildContext context) {
+//     return AlertDialog(
+//       title: Text('請先登入'),
+//       content: Text('登入後才能評論喔'),
+//       actions: <Widget>[
+//         FlatButton(
+//             key: Key('登入'),
+//             onPressed: _navigateToLogInOrSignUpPage(),
+//             child: Text('登入')),
+//         FlatButton(
+//             key: Key('稍後再說'),
+//             onPressed: _dismissLogInDialog(),
+//             child: Text('稍後再說')),
+//       ],
+//     );
+//   }
+
+//   return Container(
+//       child: FlatButton(
+//     child: TextField(
+//       decoration: InputDecoration(hintText: '留下評論'),
+//     ),
+//     onPressed: () {
+//       print('onPressss');
+//       showDialog(context: context, builder: _logInDialog);
+//     },
+//   ));
+// }
+
 Widget _buildListView(BuildContext context, List<DocumentSnapshot> snapshots) {
   return Center(
     child: ListView.separated(
-      itemCount: snapshots.length,
-      itemBuilder: (BuildContext context, int index) =>
-          _buildMyListItem(context, snapshots[index]),
+      itemCount: snapshots.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == snapshots.length) {
+          // return _buildCommentButton(context);
+        } else {
+          return _buildMyListItem(context, snapshots[index]);
+        }
+      },
       separatorBuilder: (BuildContext context, int index) => const Divider(
         thickness: 0.0,
       ),
@@ -237,3 +302,46 @@ Widget _buildMyListItem(
     ),
   );
 }
+
+// () {
+// Add a new piece of review on your professor
+// var ref = Firestore.instance
+//     .collection('schools')
+//     .document('national central univ')
+//     .collection('professors')
+//     .document(_prof)
+//     .collection('reviews');
+
+// var newdata = {
+//   'courseName': '資料科學導論',
+//   'reviewText':
+//       '中央資工找教授 陳弘軒教授人很nice很好溝通,尊重學生想做的研究方向,建議可以跟他聊聊看實驗室風氣的話建議直接去跟學長姐聊聊看最清楚',
+//   'courseDifficulty': 3.0,
+//   'professorRating': 5.0,
+//   'gradeReceived': 98.0,
+//   'forCredit': true,
+//   'wouldTakeAgain': true,
+//   'attendance': true,
+//   'thumbsUp':0,
+//   'thumbsDown':0,
+// };
+// ref.add(newdata);
+// print('add new comment on professor:$_prof');
+
+// final FirebaseAuth _auth = FirebaseAuth.instance;
+// var cur = _auth.currentUser();
+// if (cur == null) {
+//   // check if user log in or not
+//   // if user has Logged in
+//   // user can comment
+// }
+
+// else {
+// if not,
+// show LogIn AlertDiglog
+// showDialog<void>(
+//     context: context,
+//     builder: _logInDialog,
+//     barrierDismissible: false);
+// }
+// },

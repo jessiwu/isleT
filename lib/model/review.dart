@@ -36,10 +36,10 @@ class Review {
         this.attendance = map['attendance'],
         this.thumbsUp = map['thumbsUp'],
         this.thumbsDown = map['thumbsDown'],
-        this.docID = reference.documentID;
+        this.docID = reference.id;
   
   Review.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 
   @override
   String toString() => "Review<$docID:$courseName>";

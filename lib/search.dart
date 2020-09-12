@@ -61,19 +61,30 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildSuggestionItem(BuildContext context, DocumentSnapshot snapshot) {
-    return ListTile(
-      key: Key(snapshot.documentID),
-      title: Text(snapshot.data['fullName']),
-      subtitle: Text(snapshot.data['school']),
-      onTap: () => print('haha'),
+  Widget _buildSearchBar(BuildContext context) {
+    return Container(
+      width: 300,
+      height: 60,
+      child: TextField(
+        textAlignVertical: TextAlignVertical.center,
+        decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+            fillColor: Colors.white,
+            filled: true,
+            hintText: '搜尋'),
+        autofocus: true,
+        controller: _searchBarTextController,
+        // onTap: () => { print('haha')},
+      ),
     );
   }
+
 
   Widget _buildSuggestionCard(BuildContext context, DocumentSnapshot snapshot) {
     return Container(
       height: 80.0,
-      margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),
+      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
       child: Card(
         // margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 6.0),
         elevation: 1.0,
@@ -87,11 +98,14 @@ class _SearchPageState extends State<SearchPage> {
             print('Card tapped.');
           },
           child: ListTile(
-            key: Key(snapshot.documentID),
-            title: Text(snapshot.data['fullName']),
-            subtitle: Text(snapshot.data['school']),
+            key: Key(snapshot.id),
+            // title: Text(snapshot.data['fullName']),
+            // subtitle: Text(snapshot.data['school']),
+            title: Text(snapshot.get(FieldPath(['fullName']))),
+            subtitle: Text(snapshot.get(FieldPath(['school']))),
             // onTap: () => print('haha'),
-            onTap: () => _navigateToReviewPage(snapshot.data['fullName']),
+            // onTap: () => _navigateToReviewPage(snapshot.data['fullName']),
+            onTap: () => _navigateToReviewPage(snapshot.get(FieldPath(['fullName']))),
           ),
         ),
       ),
@@ -121,7 +135,7 @@ class _SearchPageState extends State<SearchPage> {
     return Flexible(
         child: (_userType != '')
             ? StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance
+                stream: FirebaseFirestore.instance
                     .collectionGroup('professors')
                     .where('lastName', isEqualTo: _userType)
                     .snapshots(),
@@ -150,12 +164,12 @@ class _SearchPageState extends State<SearchPage> {
     }
     if (_userType.length == 1) {
       // user type one search word
-      _searchByLastName = Firestore.instance
+      _searchByLastName = FirebaseFirestore.instance
           .collectionGroup('professors')
           .where('lastName', isEqualTo: _userType)
           .snapshots();
       return Flexible(
-              child: StreamBuilder<QuerySnapshot>(
+        child: StreamBuilder<QuerySnapshot>(
             stream: _searchByLastName,
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
@@ -174,9 +188,9 @@ class _SearchPageState extends State<SearchPage> {
     // user type more than one words
     print('previous search word: $_previousSearchWord');
     return Flexible(
-          child: StreamBuilder<QuerySnapshot>(
+      child: StreamBuilder<QuerySnapshot>(
           // stream: _searchByLastName,
-          stream: Firestore.instance
+          stream: FirebaseFirestore.instance
               .collectionGroup('professors')
               .where('lastName', isEqualTo: _previousSearchWord)
               .snapshots(),
@@ -190,7 +204,8 @@ class _SearchPageState extends State<SearchPage> {
                 List<DocumentSnapshot> filtered = [];
                 if (snapshot.data.documents.length != 0) {
                   snapshot.data.documents.forEach((doc) {
-                    if (doc.data['fullName'].toString().contains(_userType))
+                    // if (doc.data['fullName'].toString().contains(_userType))
+                    if (doc.get(FieldPath(['fullName'])).toString().contains(_userType))
                       filtered.add(doc);
                   });
                 }
@@ -229,19 +244,29 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            _searchBar(context),
-            // Divider(thickness: 1.0,),
-            // _searchResult(context),
-            _searchResultInDatabase(context),
-          ],
+        appBar: AppBar(
+          elevation: 0.0,
         ),
-      ),
-    );
+        // body: Container(
+        //   child: Column(
+        //     children: <Widget>[
+        //       _searchBar(context),
+        //       // Divider(thickness: 1.0,),
+        //       // _searchResult(context),
+        //       _searchResultInDatabase(context),
+        //     ],
+        //   ),
+        // ),
+        body: SafeArea(
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 20,),
+                _buildSearchBar(context),
+                _searchResultInDatabase(context),
+              ],
+            ),
+          ),
+        ));
   }
 }

@@ -1,121 +1,127 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'home_search_tab.dart';
+import 'home_user_tab.dart';
+
 class HomePage extends StatefulWidget {
+  HomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final _searchController = TextEditingController();
-  String _searchName = '';
-  _showSuggestions() {
-    if (_searchController.text != '') {
-      _searchName = _searchController.text;
-    }
+  // FocusNode myFocus;
+  int _currentIndex = 0;
+  final List<Widget> _children = [HomeSearchTab(), UserTab()];
+
+  _bottonNaviBarController(int index) {
     setState(() {
-      build(context);
+      _currentIndex = index;
     });
-  }
-
-  Widget _buildSuggestionItem(BuildContext context, DocumentSnapshot snapshot) {
-    return ListTile(
-      key: Key(snapshot.documentID),
-      title: Text(snapshot.data['fullName']),
-      subtitle: Text(snapshot.data['school']),
-      onTap: () => print('haha'),
-    );
-  }
-
-  Widget _buildSuggestionList(
-      BuildContext context, List<DocumentSnapshot> snapshots) {
-    print(snapshots.length);
-    return Center(
-      child: ListView.builder(
-        itemCount: snapshots.length,
-        itemBuilder: (BuildContext context, int index) =>
-            _buildSuggestionItem(context, snapshots[index]),
-      ),
-    );
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-          child: (_searchName == '')
-              ? Center(
-                  child: ClipRect(child: Icon(Icons.search)),
-                )
-              : StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collectionGroup('professors')
-                      .where('lastName', isEqualTo: _searchName)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError)
-                      return Text('Error: ${snapshot.error}');
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return LinearProgressIndicator();
-                      default:
-                        return (snapshot.data.documents.length != 0)
-                            ? _buildSuggestionList(
-                                context, snapshot.data.documents)
-                            : ListTile(title: Text('No result...'));
-                    }
-                  }),
-        ),
-        // Divider(),
-      ],
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu, semanticLabel: 'menu'),
-          onPressed: () {
-            print('Menu button');
-          },
-        ),
-        title: Container(
-          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-          height: 40.0,
-          child: TextField(
-            decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                ),
-                hintText: '搜尋',
-                border: OutlineInputBorder()
-                // border: InputBorder.none,
-                // contentPadding: EdgeInsets.all(8.0),
-                ),
-            textAlignVertical: TextAlignVertical.bottom,
-            controller: _searchController,
-          ),
-        ));
   }
 
   @override
   void initState() {
-    _searchController.addListener(_showSuggestions);
     super.initState();
+
+    // myFocus = FocusNode();
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
+    // Clean up the focus node when the Form is disposed.
+    // myFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // myFocus.unfocus();
     return Scaffold(
-      appBar: _buildAppBar(context),
-      body: _buildBody(context),
+        appBar: AppBar(),
+        body: _children[_currentIndex],
+        // body: SafeArea(
+        //   top: true,
+        //   child: Container(
+        //     child: Stack(
+        //       alignment: Alignment.center,
+        //       children: <Widget>[
+        //         _buildLowerLayer(),
+        //         _buildMiddleSearchBar(),
+        //         _buildUpperLayer(),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        // This trailing comma makes auto-formatting nicer for build methods.
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: _bottonNaviBarController,
+          items: [
+            BottomNavigationBarItem(
+              title: Text('search'),
+              icon: Icon(Icons.search),
+            ),
+            BottomNavigationBarItem(
+              title: Text('user'),
+              icon: Icon(Icons.account_circle),
+            )
+          ],
+        ));
+  }
+
+  _navigateToSearchPage() {
+    Navigator.pushNamed(context, '/searchPage');
+  }
+
+  _buildMiddleSearchBar() {
+    return Positioned(
+      top: 220,
+      width: 300,
+      height: 60,
+      child: Material(
+        child: TextField(
+          // focusNode: myFocus,
+          enableInteractiveSelection: false,
+          textAlignVertical: TextAlignVertical.center,
+          decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+              fillColor: Colors.white,
+              filled: true,
+              hintText: '搜尋'),
+          onTap: _navigateToSearchPage,
+        ),
+      ),
     );
+  }
+
+  _buildLowerLayer() {
+    return Column(
+      children: <Widget>[
+        Image.asset(
+          'images/lake.jpg',
+          width: 600,
+          height: 240,
+          fit: BoxFit.fill,
+        ),
+        Text('second column'),
+      ],
+    );
+  }
+
+  _buildUpperLayer() {
+    return Positioned(
+        top: 10,
+        left: 10,
+        child: Text(
+          'Find Professor?', //'找教授?',
+          style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+        ));
   }
 }

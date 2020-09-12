@@ -26,7 +26,7 @@ class _KoLabHomePageState extends State<KoLabHomePage> {
 
 Widget _buildBody(BuildContext context) {
   return StreamBuilder<QuerySnapshot>(
-    stream: Firestore.instance
+    stream: FirebaseFirestore.instance
         .collection('schools')
         .document('national central univ')
         .collection('professors')
